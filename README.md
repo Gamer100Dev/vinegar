@@ -1,5 +1,4 @@
-# <img src="splash/vinegar.png" alt="Vinegar logo"> Vinegar
-
+# <img src="splash/vinegar.png" alt="Vinegarlogo"> Vinegar BSD
 [![Pipeline Status][pipeline_img    ]][pipeline    ]
 [![Version        ][version_img     ]][version     ]
 [![Flathub        ][flathub_img     ]][flathub     ]
@@ -7,7 +6,7 @@
 [![Discord Server ][discord_img     ]][discord     ]
 [![Matrix Room    ][matrix_img      ]][matrix      ]
 
-An open-source, minimal, configurable, fast bootstrapper for running Roblox on Linux.
+An open-source, minimal, configurable, fast bootstrapper for running Roblox on BSD and Linux.
 
 [pipeline]:     https://github.com/vinegarhq/vinegar/actions/workflows/go.yml
 [pipeline_img]: https://img.shields.io/github/actions/workflow/status/vinegarhq/vinegar/go.yml?style=flat-square&label=build%20%26%20tests
@@ -23,17 +22,13 @@ An open-source, minimal, configurable, fast bootstrapper for running Roblox on L
 [matrix_img]:  https://img.shields.io/matrix/vinegarhq:matrix.org?style=flat-square&label=matrix
 
 # Features
-+ Discord Rich Presence & BloxstrapRPC support
-+ Automatic GPU selection for PRIME systems
-+ Automatic [GameMode](https://github.com/FeralInteractive/gamemode) functionality
 + Multiple instances of Roblox open simultaneously
 + Automatic Wineprefix killer when Roblox has quit
-+ Logging for both Vinegar, Wine and Roblox
++ Logging for both Vinegar, Wine and Roblox (Currently Bugged)
 + Modifications of Roblox via the Overlay directory, overwriting Roblox's files; such as re-adding the old death sound
 + Automatic DXVK Installer and uninstaller
 + Fast Multi-threaded installation and extraction of Roblox
 + Automatic removal of outdated cached packages and versions of Roblox
-+ FPS Unlocking for Player by default, without rbxfpsunlocker
 + Custom execution of wine program within wineprefix
 + Set different environment variables and FFlags for both Player and Studio, with Global to override
 + Force a specific version of Roblox to be deployed
@@ -43,6 +38,19 @@ An open-source, minimal, configurable, fast bootstrapper for running Roblox on L
 + Browser launch via MIME
 + Splash window during setup, with error dialog support
 
+## BSD Features:
+
++ Roblox and Studio launches
++ Workes with any wine version (without any wow64 errors)
++ Detection of discord is present ( you may add the protocols to your client to suit it)
+
+## To come features
+
++ Rewrite Gamemode (linux) to Gameboost available at: github.com/thindil/gameboost
++ Fixes for Roblox's player and studio; patches will be added to this repo regarding wine
++ Fix for the client
++ Login portal integration patches for studio
+  
 # See Also
 + [Discord server](https://discord.gg/dzdzZ6Pps2)
 + [Matrix room](https://matrix.to/#/#vinegarhq:matrix.org)

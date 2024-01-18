@@ -1,3 +1,5 @@
+// config/cardpick.go
+
 package config
 
 import (
@@ -10,9 +12,9 @@ import (
 )
 
 var (
-	ErrOpenGLBlind = errors.New("opengl is not capable of choosing the right gpu, it must be explicitly defined")
-	ErrNoCardFound = errors.New("gpu not found")
-	ErrBadGpuIndex = errors.New("gpu index cannot be negative")
+	ErrOpenGLBlind = errors.New("OpenGL is not capable of choosing the right GPU, it must be explicitly defined")
+	ErrNoCardFound = errors.New("GPU not found")
+	ErrBadGpuIndex = errors.New("GPU index cannot be negative")
 )
 
 func (b *Binary) pickCard() error {
@@ -71,7 +73,9 @@ func (b *Binary) pickCard() error {
 		"pci-"+strings.NewReplacer(":", "_", ".", "_").Replace(path.Base(c.Device)),
 	)
 
-	if c.Driver == "nvidia" { // Workaround for OpenGL in nvidia GPUs
+	// Adjustments for FreeBSD
+	// Note: Adjust these conditions based on your specific requirements for FreeBSD
+	if strings.Contains(c.Driver, "nvidia") { // Workaround for OpenGL on Nvidia GPUs
 		b.Env.Set("__GLX_VENDOR_LIBRARY_NAME", "nvidia")
 	} else {
 		b.Env.Set("__GLX_VENDOR_LIBRARY_NAME", "mesa")

@@ -20,7 +20,6 @@ import (
 	"github.com/vinegarhq/vinegar/roblox"
 	boot "github.com/vinegarhq/vinegar/roblox/bootstrapper"
 	"github.com/vinegarhq/vinegar/splash"
-	"github.com/vinegarhq/vinegar/util"
 	"github.com/vinegarhq/vinegar/wine"
 	"github.com/vinegarhq/vinegar/wine/dxvk"
 	"golang.org/x/sync/errgroup"
@@ -153,12 +152,6 @@ func (b *Binary) Run(args ...string) error {
 	defer func() {
 		// may or may not prevent a race condition in procfs
 		syscall.Sync()
-
-		if util.CommFound("Roblox") {
-			log.Println("Another Roblox instance is already running, not killing wineprefix")
-			return
-		}
-
 		b.Prefix.Kill()
 	}()
 

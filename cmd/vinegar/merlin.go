@@ -16,7 +16,6 @@ type Data struct {
 	Distro  string `json:"distro"`
 	Kernel  string `json:"kernel"`
 	Flatpak bool   `json:"flatpak"`
-	AVX     bool   `json:"avx"`
 	CPU     string `json:"cpu"`
 	GPUs    string `json:"gpu"` // gpu driver list seperated by commas
 }
@@ -32,7 +31,6 @@ func SubmitMerlin() error {
 		Distro:  sysinfo.Distro,
 		Kernel:  sysinfo.Kernel,
 		Flatpak: sysinfo.InFlatpak,
-		AVX:     sysinfo.CPU.AVX,
 		CPU:     sysinfo.CPU.Name,
 		GPUs:    strings.Join(cs, ","),
 	}

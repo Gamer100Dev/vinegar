@@ -1,3 +1,5 @@
+// vinegar.go
+
 package main
 
 import (
@@ -46,7 +48,6 @@ func main() {
 	wine.Wine = "wine64"
 
 	switch cmd {
-	// These commands don't require a configuration
 	case "delete", "edit", "submit", "version":
 		switch cmd {
 		case "delete":
@@ -62,8 +63,6 @@ func main() {
 		case "version":
 			fmt.Println("Vinegar", Version)
 		}
-	// These commands (except player & studio) don't require a configuration,
-	// but they require a wineprefix, hence wineroot of configuration is required.
 	case "sysinfo", "player", "studio", "exec", "kill", "winetricks":
 		cfg, err := config.Load(*configPath)
 		if err != nil {
@@ -71,8 +70,6 @@ func main() {
 		}
 
 		pfx := wine.New(dirs.Prefix, os.Stderr)
-		// Always ensure its created, wine will complain if the root
-		// directory doesnt exist
 		if err := os.MkdirAll(dirs.Prefix, 0o755); err != nil {
 			log.Fatal(err)
 		}
@@ -113,7 +110,7 @@ func Delete() {
 
 func Sysinfo(pfx *wine.Prefix) {
 	cmd := pfx.Wine("--version")
-	cmd.Stdout = nil // required for Output()
+	cmd.Stdout = nil
 	ver, err := cmd.Output()
 	if err != nil {
 		log.Fatal(err)
@@ -130,15 +127,10 @@ func Sysinfo(pfx *wine.Prefix) {
 	info := `* Vinegar: %s %s
 * Distro: %s
 * Processor: %s
-  * Supports AVX: %t
-  * Supports split lock detection: %t
 * Kernel: %s
 * Wine: %s`
 
-	fmt.Printf(info, Version, revision, sysinfo.Distro, sysinfo.CPU.Name, sysinfo.CPU.AVX, sysinfo.CPU.SplitLockDetect, sysinfo.Kernel, ver)
-	if sysinfo.InFlatpak {
-		fmt.Println("* Flatpak: [x]")
-	}
+	fmt.Printf(info, Version, revision, sysinfo.Distro, sysinfo.CPU.Name, sysinfo.Kernel, ver)
 
 	fmt.Println("* Cards:")
 	for i, c := range sysinfo.Cards {
@@ -151,7 +143,6 @@ func LogFile(name string) (*os.File, error) {
 		return nil, err
 	}
 
-	// name-2006-01-02T15:04:05Z07:00.log
 	path := filepath.Join(dirs.Logs, name+"-"+time.Now().Format(time.RFC3339)+".log")
 
 	file, err := os.Create(path)
@@ -182,14 +173,6 @@ func (b *Binary) Main(args ...string) {
 		firstRun = true
 	}
 
-	if firstRun && !sysinfo.CPU.AVX {
-		c := b.Splash.Dialog(DialogNoAVX, true)
-		if !c {
-			log.Fatal("avx is (may be) required to run roblox")
-		}
-		log.Println("WARNING: Running roblox without AVX!")
-	}
-
 	if !wine.WineLook() {
 		b.Splash.Dialog(DialogNoWine, false)
 		log.Fatalf("%s is required to run roblox", wine.Wine)
@@ -199,15 +182,10 @@ func (b *Binary) Main(args ...string) {
 		err := b.Splash.Run()
 		if errors.Is(splash.ErrClosed, err) {
 			log.Printf("Splash window closed!")
-
-			// Will tell Run() to immediately kill Roblox, as it handles INT/TERM.
-			// Otherwise, it will just with the same appropiate signal.
 			syscall.Kill(syscall.Getpid(), syscall.SIGINT)
 			return
 		}
 
-		// The splash window didn't close cleanly (ErrClosed), an
-		// internal error occured.
 		if err != nil {
 			log.Fatalf("splash: %s", err)
 		}
@@ -225,8 +203,6 @@ func (b *Binary) Main(args ...string) {
 		os.Exit(1)
 	}
 
-	// Technically this is 'initializing wineprefix', as SetDPI calls Wine which
-	// automatically create the Wineprefix.
 	if firstRun {
 		log.Printf("Initializing wineprefix at %s", b.Prefix.Dir())
 		b.Splash.SetMessage("Initializing wineprefix")
@@ -237,8 +213,6 @@ func (b *Binary) Main(args ...string) {
 		}
 	}
 
-	// If the launch uri contains a channel key with a value
-	// that isn't empty, Roblox requested a specific channel
 	func() {
 		if len(args) < 1 {
 			return
